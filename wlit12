@@ -1,0 +1,75 @@
+// calculator.js
+document.addEventListener("DOMContentLoaded", function () {
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll("button");
+  
+    let currentInput = "";
+    let operator = "";
+    let firstNumber = "";
+    let shouldResetDisplay = false;
+  
+    buttons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const value = button.id;
+  
+        if (value >= "0" && value <= "9" || value === ".") {
+          if (shouldResetDisplay) {
+            display.value = "";
+            shouldResetDisplay = false;
+          }
+          currentInput += value;
+          display.value = currentInput;
+        } else if (value === "C") {
+          clear();
+        } else if (value === "⌫") {
+          backspace();
+        } else if (value === "=") {
+          calculate();
+        } else {
+          if (firstNumber === "") {
+            firstNumber = currentInput;
+            currentInput = "";
+            operator = value;
+          } else {
+            calculate();
+            operator = value;
+          }
+        }
+      });
+    });
+  
+    function clear() {
+      display.value = "";
+      currentInput = "";
+      firstNumber = "";
+      operator = "";
+    }
+  
+    function backspace() {
+      currentInput = currentInput.slice(0, -1);
+      display.value = currentInput;
+    }
+  
+    function calculate() {
+      if (firstNumber !== "" && operator !== "" && currentInput !== "") {
+        switch (operator) {
+          case "+":
+            currentInput = (parseFloat(firstNumber) + parseFloat(currentInput)).toString();
+            break;
+          case "-":
+            currentInput = (parseFloat(firstNumber) - parseFloat(currentInput)).toString();
+            break;
+          case "*":
+            currentInput = (parseFloat(firstNumber) * parseFloat(currentInput)).toString();
+            break;
+          case "/":
+            currentInput = (parseFloat(firstNumber) / parseFloat(currentInput)).toString();
+            break;
+        }
+        display.value = currentInput;
+        firstNumber = currentInput;
+        shouldResetDisplay = true;
+      }
+    }
+  });
+  
